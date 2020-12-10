@@ -1,7 +1,12 @@
 const express = require('express')
 const skio = require('socket.io')
+const five = require('johnny-five')
+
 const app = express()
+const  {Board, Led} = five
+const board = new Board({port: 'COM5'})
 const port = process.env.PROT || 3000
+
 app.use(express.static('public'))
 
 const server = app.listen(port,() => {
@@ -9,19 +14,33 @@ const server = app.listen(port,() => {
 })
 
 const io = skio(server)
-io.on('connection',(socket) => {
-  console.log('A user connected')
-  
-  socket.on('disconnect', () => {
-    console.log(' user disconnected')
-  })
+board.on('ready', ()=>{
+  const led = new Led(13)
+  led.off()
+  io.on('connection', (socket)=>{
+    console.log('A user connected')
 
-  socket.on('chat msg', (payload)=>{
-    let {msg, name} = payload
-    
-    console.log(`${name}: ${msg}`)
+    socket.on('disconnect', () => {
+      console.log('A user disconnected')
+    })
 
-    socket.emit('chat msg',payload)
+    socket.on('switchLED', payload => {
+      let { isOn } = payload
+      console.log('switchLED',payload)
+      if(isOn) led.on()
+      else led.off()
+      io.emit('switchLED', payload)
+    })
+
+    socket.on('chat msg', (payload) => {
+      let {msg, name} = payload
+      console.log('===================')
+      console.log(`${name}: ${msg}`)
+      // 回全部 user
+      io.emit('chat msg',payload)
+    })
+
   })
 })
+
 
