@@ -1,10 +1,7 @@
 const express = require('express')
 const skio = require('socket.io')
-const five = require('johnny-five')
 
 const app = express()
-const  {Board, Led} = five
-const board = new Board({port: 'COM5'})
 const port = process.env.PROT || 3000
 
 app.use(express.static('public'))
@@ -12,35 +9,39 @@ app.use(express.static('public'))
 const server = app.listen(port,() => {
   console.log(`App is listen on http://localhost:${port}`)
 })
-
+const users = {}
 const io = skio(server)
-board.on('ready', ()=>{
-  const led = new Led(13)
-  led.off()
   io.on('connection', (socket)=>{
-    console.log('A user connected')
+    let id = socket.id
+    users[id] = {
+      name: '',
+    }
+    console.log(`A user ${id} connected`)
+    console.log(users)
 
     socket.on('disconnect', () => {
-      console.log('A user disconnected')
+      let {id} = socket
+      console.log(`A user ${id} disconnected`)
+      io.emit('userDisconnect',{
+        msg: '有使用者離線了'
+      })
+      delete users[id]
+      console.log(users)
     })
 
-    socket.on('switchLED', payload => {
-      let { isOn } = payload
-      console.log('switchLED',payload)
-      if(isOn) led.on()
-      else led.off()
-      io.emit('switchLED', payload)
-    })
 
     socket.on('chat msg', (payload) => {
+      let {id} = socket
       let {msg, name} = payload
       console.log('===================')
+      users[id].name = name
       console.log(`${name}: ${msg}`)
       // 回全部 user
-      io.emit('chat msg',payload)
+      io.emit('chat msg', payload)
+      console.log(users)
     })
 
   })
-})
+// })
 
 
