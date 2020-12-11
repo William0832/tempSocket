@@ -17,55 +17,46 @@
         </nav>
         <div class="container">
             <div class="row mb-2">
-                <div class="col-10">
+                <div class="col-9">
                     <div class="card">
                         <div class="card-header">
                             <p class="card-text">Msg</p>
                         </div>
-                        <ul id="msgs" class="card-body msg-wrapper">
+                        <ul id="msgs" class="card-body msg-wrapper overflow-auto">
 
                         </ul>
                     </div>
                 </div>
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-header">
+                            Users
+                        </div>
+                        <div class="card-body m-0 p-0">
+                            <ul id="users" class="list-group list-group-flush">
+                                <!-- <li class="list-group-item"></li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-10">
+            <div class="row mb-2">
+            </div>
+            <form class="row">
+                <div class="col-2 pr-0">
                     <div class="input-group">
-                        <input id="user-name" type="text" class="form-control input-group-prepend " placeholder="name">
-
-                        <input required placeholder="msg..." type="text" id="input-text" class="form-control">
+                        <input id="user-name" type="text" class="form-control" placeholder="name" required>
+                    </div>
+                </div>
+                <div class="col-7 pl-1">
+                    <div class="input-group">
+                        <input placeholder="msg..." type="text" id="input-text" class="form-control">
                         <div class="input-group-append">
                             <button id="submit" class="btn btn-outline-primary">submit</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- <div class="row my-3">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-header">
-                            LED SWITCHER
-                        </div>
-                        <div class="card-body">
-                            <div id="switcher" class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="switch">
-                                <label class="custom-control-label" for="switch">LED OFF</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="card text-left">
-                        <div class="card-header">
-                            房間溫度
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text" id="temperature">
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+            </form>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
